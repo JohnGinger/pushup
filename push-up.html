@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>30-Day Squat and Push-Up Challenge</title>
+    <style>
+      /* Reset and Base Styles */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #ffffff;
+        color: #000;
+        margin: 20px;
+        line-height: 1.6;
+      }
+
+      /* Header Styles */
+      h1 {
+        text-align: center;
+        font-size: 36px;
+        margin-bottom: 10px;
+      }
+      h1 span.red {
+        color: #e63946;
+      }
+      h1 span.black {
+        color: #000;
+      }
+
+      .challenge-info {
+        text-align: center;
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+
+      /* Grid Layout */
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        margin: 0 auto;
+        gap: 10px;
+        max-width: 1200px;
+      }
+
+      /* Day Box Styles */
+      .day-box {
+        border: 1px solid #eee;
+        padding: 15px;
+        text-align: center;
+        background-color: #f9f9f9;
+        transition: all 0.3s ease;
+        z-index: 2;
+      }
+      .day-box h2.day {
+        color: darkgrey;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin: 0;
+      }
+      .day-box p {
+        margin: 5px 0;
+        font-size: 16px;
+      }
+
+      /* Rest Day Styles */
+      .day-box.rest-day {
+        background-color: #f0f0f0;
+        font-style: italic;
+      }
+
+      /* Interactive States */
+      .day-box:active {
+        transform: scale(0.95);
+      }
+      .day-box.done {
+        background-color: lightgreen;
+        border-color: green;
+        color: white;
+        transform: scale(1.05) scaleY(1.02);
+        box-shadow: 0 4px 8px rgba(0, 128, 0, 0.3);
+      }
+      .day-box.done h2.day {
+        color: white;
+      }
+
+      .day-box.clickable {
+        cursor: pointer;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .grid-container {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .grid-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .day-box {
+          font-size: 14px;
+          padding: 10px;
+        }
+      }
+
+      .share-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #25d366; /* WhatsApp green */
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 50px; /* Rounded corners */
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+        text-align: center;
+        width: auto;
+        margin: 12px;
+      }
+
+      .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .share-button:hover {
+        background-color: #128c7e; /* Darker green on hover */
+        transform: scale(1.05); /* Slightly enlarge the button on hover */
+      }
+
+      .share-button:focus {
+        outline: none; /* Remove outline when focused */
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Add a blue glow effect on focus */
+      }
+
+      .whatsapp-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px; /* Space between icon and text */
+      }
+
+      /* Ensure the button is fully responsive on small screens */
+      @media (max-width: 600px) {
+        .share-button {
+          font-size: 16px;
+          padding: 10px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <span class="red">3,000 Squats</span> and
+      <span class="black">1,000 Push-Ups</span>
+    </h1>
+
+    <div class="center">
+      <button id="whatsapp-share" class="share-button">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+          alt="WhatsApp"
+          class="whatsapp-icon"
+        />
+        Share Progress on WhatsApp
+      </button>
+    </div>
+
+    <div class="grid-container">
+      <!-- Day boxes will be dynamically populated -->
+    </div>
+
+    <script>
+      // Fitness Challenge Configuration
+      const challengeData = [
+        { day: 1, squats: 40, pushUps: 16 },
+        { day: 2, squats: 45, pushUps: 18 },
+        { day: 3, squats: 50, pushUps: 20 },
+        { day: 4, rest: true },
+        { day: 5, squats: 55, pushUps: 22 },
+        { day: 6, squats: 60, pushUps: 26 },
+        { day: 7, squats: 65, pushUps: 28 },
+        { day: 8, rest: true },
+        { day: 9, squats: 70, pushUps: 32 },
+        { day: 10, squats: 75, pushUps: 34 },
+        { day: 11, squats: 80, pushUps: 36 },
+        { day: 12, squats: 90, pushUps: 40 },
+        { day: 13, rest: true },
+        { day: 14, squats: 100, pushUps: 42 },
+        { day: 15, squats: 110, pushUps: 46 },
+        { day: 16, rest: true },
+        { day: 17, squats: 120, pushUps: 48 },
+        { day: 18, squats: 130, pushUps: 50 },
+        { day: 19, squats: 140, pushUps: 52 },
+        { day: 20, rest: true },
+        { day: 21, squats: 150, pushUps: 54 },
+        { day: 22, squats: 160, pushUps: 56 },
+        { day: 23, squats: 180, pushUps: 58 },
+        { day: 24, rest: true },
+        { day: 25, squats: 200, pushUps: 60 },
+        { day: 26, squats: 240, pushUps: 62 },
+        { day: 27, squats: 260, pushUps: 64 },
+        { day: 28, rest: true },
+        { day: 29, squats: 280, pushUps: 66 },
+        { day: 30, squats: 300, pushUps: 70 },
+      ];
+
+      const gridContainer = document.querySelector(".grid-container");
+
+      // Dynamically generate day boxes
+      challengeData.forEach((data) => {
+        const dayBox = document.createElement("div");
+        dayBox.classList.add("day-box");
+
+        if (data.rest) {
+          dayBox.classList.add("rest-day");
+          dayBox.innerHTML = `
+                    <h2 class="day">Day ${data.day}</h2>
+                    <p>Rest Day</p>
+                `;
+        } else {
+          dayBox.classList.add("clickable");
+          dayBox.innerHTML = `
+                    <h2 class="day">Day ${data.day}</h2>
+                    <p>${data.squats} Squats</p>
+                    <p>${data.pushUps} Push-Ups</p>
+                `;
+        }
+
+        dayBox.addEventListener("click", () => {
+          if (!dayBox.classList.contains("rest-day")) {
+            dayBox.classList.toggle("done");
+            updateDoneDays(data.day);
+          }
+        });
+
+        gridContainer.appendChild(dayBox);
+
+        // Check and apply done state from cookies
+        if (isDayDone(data.day)) {
+          dayBox.classList.add("done");
+        }
+      });
+
+      // Cookie Management Functions
+      function setCookie(name, value, days) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${encodeURIComponent(
+          value
+        )};expires=${expires.toUTCString()};path=/`;
+      }
+
+      function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(";");
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i].trim();
+          if (c.indexOf(nameEQ) === 0) {
+            return decodeURIComponent(c.substring(nameEQ.length, c.length));
+          }
+        }
+        return "";
+      }
+
+      function isDayDone(dayNumber) {
+        const doneDays = getCookie("doneDays");
+        return doneDays && doneDays.split(",").includes(dayNumber.toString());
+      }
+
+      function updateDoneDays(dayNumber) {
+        let doneDays = getCookie("doneDays");
+        doneDays = doneDays ? doneDays.split(",") : [];
+
+        if (!doneDays.includes(dayNumber.toString())) {
+          doneDays.push(dayNumber);
+          setCookie("doneDays", doneDays.join(","), 7);
+        } else {
+          setCookie(
+            "doneDays",
+            doneDays.filter((x) => x !== dayNumber.toString()).join(","),
+            7
+          );
+        }
+      }
+
+      // Function to get the user's progress from cookies
+      function getProgressMessage() {
+        const doneDays = getCookie("doneDays"); // Retrieve done days from the cookie
+        if (!doneDays) {
+          return "I haven't marked any days as done yet. Progress is still pending!";
+        }
+
+        const doneDaysArray = doneDays.split(",");
+        let message = `🫡 PROGRESS REPORT 🫡\n`;
+
+        let totalSquats = 0;
+        let totalPressups = 0;
+
+        for (let i = 1; i <= 30; i++) {
+          // Assuming you have 30 days
+          if (doneDaysArray.includes(i.toString())) {
+            totalSquats += Number(challengeData[i].squats) || 0;
+            totalPressups += Number(challengeData[i].pushUps) || 0;
+          }
+        }
+
+        message += `${totalSquats} Squats \n`;
+        message += `${totalPressups} Pressups \n`;
+
+        return message;
+      }
+
+      // Function to open WhatsApp with the generated progress message
+      function shareOnWhatsApp() {
+        const message = getProgressMessage(); // Get the progress message
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
+          message
+        )}`;
+
+        // Open the WhatsApp share URL in a new tab or window
+        window.open(whatsappUrl, "_blank");
+      }
+
+      // Add event listener to the WhatsApp button
+      document
+        .getElementById("whatsapp-share")
+        .addEventListener("click", shareOnWhatsApp);
+    </script>
+  </body>
+</html>
